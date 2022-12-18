@@ -1,75 +1,72 @@
-﻿//Задача 54: Задайте двумерный массив. Напишите программу, которая упорядочит по убыванию элементы каждой строки двумерного массива.
+﻿// Задача 56: Задайте прямоугольный двумерный массив. Напишите программу, 
+// которая будет находить строку с наименьшей суммой элементов.
 
-Console.Clear();
-Console.WriteLine($"Задача 54: Задайте двумерный массив. Напишите программу, которая упорядочит по убыванию элементы каждой строки двумерного массива.");
-Console.WriteLine($"\nВведите размер массива m x n и диапазон случайных значений:");
-int m = InputNumbers("Введите m: ");
-int n = InputNumbers("Введите n: ");
-int range = InputNumbers("Введите диапазон: от 1 до ");
+// Например, задан массив:
 
-int[,] array = new int[m, n];
-CreateArray(array);
-WriteArray(array);
+// 1 4 7 2
 
-Console.WriteLine($"\nОтсортированный массив: ");
-OrderArrayLines(array);
-WriteArray(array);
+// 5 9 2 3
 
-void OrderArrayLines(int[,] array)
+// 8 4 2 4
+
+// 5 2 6 7
+
+// Программа считает сумму элементов в каждой строке и выдаёт номер строки 
+// с наименьшей суммой элементов: 1 строка
+
+void FillArray(int[,] collection)
 {
-  for (int i = 0; i < array.GetLength(0); i++)
+
+  for( int i = 0; i < collection.GetLength(0);i++)
   {
-    for (int j = 0; j < array.GetLength(1); j++)
-    {
-      for (int k = 0; k < array.GetLength(1) - 1; k++)
-      {
-        if (array[i, k] < array[i, k + 1])
-        {
-          int temp = array[i, k + 1];
-          array[i, k + 1] = array[i, k];
-          array[i, k] = temp;
-        }
-      }
-    }
+    for( int j = 0; j < collection.GetLength(1); j++)
+    { 
+      collection[i,j] = new Random().Next(1,10);   
+    }      
   }
 }
 
-int InputNumbers(string input)
+void PrintArray(int[,] col)
 {
-  Console.Write(input);
-  int output = Convert.ToInt32(Console.ReadLine());
-  return output;
-}
-
-void CreateArray(int[,] array)
-{
-  for (int i = 0; i < array.GetLength(0); i++)
+  for( int i = 0; i < col.GetLength(0);i++)
   {
-    for (int j = 0; j < array.GetLength(1); j++)
-    {
-      array[i, j] = new Random().Next(range);
-    }
+    for( int j = 0; j < col.GetLength(1); j++)
+    { 
+      Console.Write($"{col[i,j]}  ");
+    }  
+      Console.WriteLine(); 
   }
 }
 
-void WriteArray(int[,] array)
+Console.WriteLine("Enter size of the matrix");
+int m = Convert.ToInt32(Console.ReadLine());
+int n = m;
+int [,] array = new int[m,n];
+
+FillArray(array);
+
+PrintArray(array);
+
+int SumRows(int[,] array, int i)
 {
-  for (int i = 0; i < array.GetLength(0); i++)
+  int sum = array[i,0];
+  for (int j = 1; j < array.GetLength(1); j++)
   {
-    for (int j = 0; j < array.GetLength(1); j++)
-    {
-      Console.Write(array[i, j] + " ");
-    }
-    Console.WriteLine();
+    sum = sum + array[i,j];
+  }
+  return sum;
+}
+
+int min = 0;
+int sum = SumRows(array, 0);
+for (int i = 1; i < array.GetLength(0); i++)
+{
+  int temp = SumRows(array, i);
+  if (sum > temp)
+  {
+    sum = temp;
+    min = i;
   }
 }
-{
-  for (int i = 0; i < array.GetLength(0); i++)
-  {
-    for (int j = 0; j < array.GetLength(1); j++)
-    {
-      Console.Write(array[i, j] + " ");
-    }
-    Console.WriteLine();
-  }
-}
+
+Console.WriteLine($"Row with min sum is {min}");
